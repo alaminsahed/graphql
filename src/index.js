@@ -65,6 +65,7 @@ type Query{
     add(a:Float!, b:Float!): String!
     sum(number:[Float]!): Float!
     number: [Int]!
+    users: [User!]!
     me: User!
     posts(query: String): [Post]!
     comment: [Comment]!
@@ -95,6 +96,9 @@ type Comment{
 
 const resolvers={
     Query:{
+        users:(parent,args,ctx,info)=>{
+            return users;
+        },
         sum:(parent,args,ctx,info)=>{
             if(args.number.length === 0){
                 return 0;
@@ -112,12 +116,12 @@ const resolvers={
             return `Konika said to ${args.greeterName}`
         },
         me:()=>{
-            return{
-                id:"12345",
-                name: "jalmal",
-                email: "ja@gmail.com",
-                age: null
+            return {
+                id: '123098',
+                name: 'Mike',
+                email: 'mike@example.com'
             }
+
         },
         posts:(_,args)=>{
             if(!args.query)
@@ -138,6 +142,13 @@ const resolvers={
         author:(parent,args,ctx,info)=>{
             return users.find(user=>{
                 return user.id === parent.author
+            })
+        }
+    },
+    User:{
+        posts:(parent,args,ctx,info)=>{
+            return posts.filter(post=>{
+                return post.author=== parent.id
             })
         }
     }
